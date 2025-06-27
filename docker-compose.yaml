@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15.4
+    container_name: t4c-db
+    environment:
+      POSTGRES_DB: trees4cities
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: baguga123
+    ports:
+      - "5432:5432"
+    networks:
+      - t4c-network
+
+  app:
+    build: .
+    container_name: t4c-api
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/trees4cities
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: baguga123
+    networks:
+      - t4c-network
+
+networks:
+  t4c-network:
